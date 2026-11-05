@@ -62,7 +62,7 @@ button, input, select { font: inherit; color: inherit; }
 body::before { background: var(--nav); }
 .band { background: var(--nav); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
 .band .wrap { padding-block: 10px; display: flex; gap: 10px 20px; align-items: center; flex-wrap: wrap; }
-.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 19px; white-space: nowrap; color: var(--fg); }
+.brand { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 19px; white-space: nowrap; color: var(--fg); }
 .logo { min-width: 28px; padding: 0 6px; height: 28px; border-radius: 7px; background: var(--cta); color: var(--on-cta); display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
 .search { position: relative; flex: 1 1 200px; min-width: 0; }
 .search input { width: 100%; padding: 9px 14px 9px 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font-size: 16px; }
@@ -144,7 +144,38 @@ a.link:hover, button.link:hover { text-decoration: underline; }
 .pcard .src { font-size: 12px; color: var(--fg-3); }
 .pcard a { color: var(--link); font-weight: 600; }
 .pcard.missing p { color: var(--fg-3); }
+.pcard p, .pcard li { color: var(--fg-2); font-size: 14px; }
+.pcard ul { margin: 0; padding-left: 18px; display: grid; gap: 2px; }
+.pcard .muted { color: var(--fg-3); }
+.pcard textarea { width: 100%; border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px; background: var(--surface-2); color: var(--fg); font: inherit; font-size: 16px; resize: vertical; }
+.pcard .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.btn { justify-self: start; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 14px; cursor: pointer; }
+.btn.primary { background: var(--cta); border-color: var(--cta); color: var(--on-cta); }
 .more { margin-top: 10px; }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.ccard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 8px; align-content: start; background: var(--surface-2); min-width: 0; }
+.cname { display: flex; align-items: center; gap: 8px; font-size: 15px; min-width: 0; }
+.cname .link { text-align: left; }
+.cgpa { font-family: var(--f-display); font-weight: 700; font-size: 34px; line-height: 1; color: var(--num); }
+.cgpa small { font-family: var(--f-body); font-size: 13px; font-weight: 500; color: var(--fg-3); margin-left: 6px; }
+.ccard dl { margin: 0; display: grid; gap: 4px; }
+.ccard dl div { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+.ccard dt { color: var(--fg-3); }
+.ccard dd { margin: 0; font-weight: 600; }
+.ccard .trend { margin: 0; font-size: 13px; color: var(--fg-2); border-top: 1px solid var(--line); padding-top: 8px; }
+.tag.good { background: color-mix(in srgb, var(--good) 15%, transparent); color: var(--good); justify-self: start; margin: 0; }
+.tag.ghost { visibility: hidden; justify-self: start; margin: 0; }
+@media (max-width: 560px) { .compare { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 47%; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding-bottom: 4px; } .ccard { padding: 12px; scroll-snap-align: start; } .cgpa { font-size: 28px; } }
+.hero { padding-block: 24px 8px; display: grid; gap: 12px; max-width: 680px; }
+#heroviz { width: 100%; max-width: 100%; height: 110px; display: block; margin-bottom: 6px; }
+@media (min-width: 900px) { .hero { max-width: none; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); column-gap: 48px; align-items: end; } .hero > :not(#heroviz) { grid-column: 1; } #heroviz { grid-column: 2; grid-row: 1 / span 3; height: 100%; min-height: 220px; margin: 0; } }
+.hero h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(32px, 7vw, 52px); line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; }
+.hero p { margin: 0; color: var(--fg-2); font-size: 17px; max-width: 52ch; }
+.search.big input { padding: 14px 16px 14px 44px; font-size: 17px; border-width: 1.5px; box-shadow: var(--shadow); }
+.search.big svg { left: 16px; }
+.homeblock h2 { margin: 0 0 10px; font-family: var(--f-display); font-size: 18px; font-weight: 600; }
+.chiprow { display: flex; flex-wrap: wrap; gap: 8px; }
+.chiprow .chip { font-size: 14px; padding: 7px 14px; }
 .sm-only { display: none; }
 .semrow { display: flex; gap: 8px; overflow-x: auto; padding-block: 2px 6px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
 .sem { flex: none; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg-2); border-radius: 999px; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
@@ -190,7 +221,7 @@ details.panel[open] > summary::after { content: "Hide"; }
 
 <header class="band">
   <div class="wrap">
-    <div class="brand"><span class="logo" aria-hidden="true">AGF</span><span class="bname">Aggie Grade Finder</span></div>
+    <a class="brand" href="#" aria-label="Aggie Grade Finder home"><span class="logo" aria-hidden="true">AGF</span><span class="bname">Aggie Grade Finder</span></a>
     <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <input id="q" type="search" autocomplete="off" placeholder="Course or professor" aria-label="Search courses and professors">
@@ -269,6 +300,57 @@ let IDX = null;
 const idxReady = fetch("courses.json").then(r => r.ok ? r.json() : null).then(j => { IDX = j; if (document.activeElement === qi) showSuggest(); return j; }).catch(() => null);
 const triedProf = new Set();
 let idxDone = false; idxReady.then(() => { idxDone = true; });
+function remember(type, key) { const r = store.get("agf-recent", []).filter(x => !(x.type === type && x.key === key)); r.unshift({type, key}); store.set("agf-recent", r.slice(0, 6)); }
+function renderHome() {
+  if (chart) { chart.destroy(); chart = null; }
+  const recent = store.get("agf-recent", []);
+  const popular = IDX ? Object.entries(IDX.courses).sort((a,b) => b[1][0] - a[1][0]).slice(0, 12).map(([c]) => c) : COURSES;
+  const chip = (type, key) => `<button class="chip" ${type === "prof" ? `data-prof="${esc(key)}"` : `data-course="${key}"`}>${type === "prof" ? esc(nice(key)) : key}</button>`;
+  document.getElementById("app").innerHTML = `
+    <section class="hero">
+      <canvas id="heroviz" aria-hidden="true"></canvas>
+      <h1>Pick your classes with real grades.</h1>
+      <p>Every Texas A&amp;M course and professor, with GPA and how many students got an A, semester by semester.</p>
+      <div class="search big"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="q2" type="search" autocomplete="off" placeholder="Try chem, MATH 151 or Johnson" aria-label="Search courses and professors"></div>
+    </section>
+    ${recent.length ? `<section class="homeblock"><h2>Recent</h2><div class="chiprow">${recent.map(r => chip(r.type, r.key)).join("")}</div></section>` : ""}
+    <section class="homeblock"><h2>Most taken courses</h2><div class="chiprow">${popular.map(c => chip("course", c)).join("")}</div></section>`;
+  startHeroViz();
+  const q2 = document.getElementById("q2");
+  q2.onfocus = () => { qi.focus(); };
+  q2.oninput = () => { qi.value = q2.value; q2.value = ""; qi.focus(); showSuggest(); };
+}
+// Home animation: a living grade histogram. Five bands (A to F) of thin bars that swell and settle like a crowd of semesters.
+let vizRaf = 0;
+function startHeroViz() {
+  cancelAnimationFrame(vizRaf);
+  const cv = document.getElementById("heroviz"); if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const bands = ["--g-a","--g-b","--g-c","--g-d","--g-f"];
+  const weights = [1, 0.72, 0.42, 0.2, 0.12];
+  const N = 60, seeds = Array.from({length: N}, (_, i) => [Math.sin(i * 12.9898) * 43758.5453 % 1, Math.cos(i * 78.233) * 12345.678 % 1]);
+  let cols = bands.map(css), t0 = performance.now();
+  const frame = now => {
+    if (!cv.isConnected) return;
+    const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cols = bands.map(css); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const t = reduce ? 4 : (now - t0) / 1000, gap = 3, bw = (w - gap * (N - 1)) / N;
+    for (let i = 0; i < N; i++) {
+      const band = Math.min(4, Math.floor(i / (N / 5))), x = i * (bw + gap);
+      const [a, b] = seeds[i];
+      const wave = 0.55 + 0.25 * Math.sin(t * 0.9 + i * 0.22 + a * 6) + 0.2 * Math.sin(t * 0.37 - i * 0.11 + b * 9);
+      const bh = Math.max(4, h * weights[band] * wave);
+      ctx.fillStyle = cols[band];
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, h - bh, bw, bh, [Math.min(4, bw / 2), Math.min(4, bw / 2), 0, 0]) : ctx.rect(x, h - bh, bw, bh); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (!reduce) vizRaf = requestAnimationFrame(frame);
+  };
+  vizRaf = requestAnimationFrame(frame);
+}
 function renderDept(code) {
   const name = (IDX && IDX.depts[code]) || code;
   const list = IDX ? Object.entries(IDX.courses).filter(([c]) => c.startsWith(code + " ")) : [];
@@ -358,7 +440,7 @@ function route() {
     if (D.courses[c]) v = {type:"course", key:c};
     else if (COURSE_RE.test(c)) { showLoading(c); fetchCourse(c).then(route, () => { showMissing(c); }); return; }
   }
-  if (!v) v = {type:"course", key: D.courses["SCMT 364"] ? "SCMT 364" : COURSES[0]};
+  if (!v) { st.view = {type:"home"}; renderHome(); if (!IDX && !idxDone) idxReady.then(() => { if (st.view.type === "home") renderHome(); }); return; }
   const changed = !st.view || st.view.type !== v.type || st.view.key !== v.key;
   st.view = v;
   if (changed) { st.chartProfs = null; st.secFilter = ""; st.secLimit = 40; }
@@ -370,7 +452,7 @@ window.addEventListener("hashchange", route);
 // ---------- render ----------
 let chart = null;
 function render() {
-  if (st.view.type === "course") renderCourse(st.view.key); else if (st.view.type === "dept") renderDept(st.view.key); else renderProf(st.view.key);
+  if (st.view.type === "home") renderHome(); else if (st.view.type === "course") renderCourse(st.view.key); else if (st.view.type === "dept") renderDept(st.view.key); else renderProf(st.view.key);
   document.getElementById("foot").innerHTML = `<b>About the data.</b> Section-level grade counts from Texas A&amp;M's public grade distribution reports (Spring 2015 to ${semLabel(LATEST)}), via anex.us. GPA counts A through F only; Q-drops, I, S and U are left out of GPA, as the registrar does. Professors are listed the way the reports list them: last name and first initial. Honors sections are numbered 200–299.`;
 }
 
@@ -405,7 +487,7 @@ function renderCourse(key) {
   // default chart selection: most students in the last 3 years, up to 5
   if (!st.chartProfs) {
     const recent = profList.map(x => ({ p: x.p, n: byProf.get(x.p).filter(r => r[R.T] > LATEST-30).reduce((s,r)=>s+r[R.A]+r[R.B]+r[R.C]+r[R.D]+r[R.F],0) }))
-      .sort((x,y) => y.n - x.n).filter(x => x.n > 0).slice(0,5);
+      .sort((x,y) => y.n - x.n).filter(x => x.n > 0).slice(0,3);
     st.chartProfs = new Set((recent.length ? recent : profList.slice(0,5)).map(x => x.p));
   }
   // stable colors: by order of first selection; keep up to 8
@@ -418,13 +500,14 @@ function renderCourse(key) {
     </div>
     ${filtersHtml(semsOf(all))}
     ${statsHtml(a, "")}
+    ${compareHtml(profList, all, colorOf)}
     <section class="panel">
       <h2>GPA by semester</h2>
       <div class="chartbox"><canvas id="chart" role="img" aria-label="Line chart of average GPA by semester for selected professors"></canvas></div>
       <div class="legend" id="legend"></div>
     </section>
     <section class="panel">
-      <div class="tablebar"><h2>Professors</h2><span class="hint" style="margin:0">Tick to add to the chart</span></div>
+      <div class="tablebar"><h2>Professors</h2><span class="hint" style="margin:0">Tick to compare and chart</span></div>
       <div class="tscroll"><table id="ptable">${profTable(profList, colorOf)}</table></div>
       <p class="sortnote" id="psort"></p>
     </section>
@@ -435,6 +518,7 @@ function renderCourse(key) {
       <div class="more" id="secmore"></div>
     </details>`;
   bindFilters(app);
+  remember("course", key);
   bindProfTable(app.querySelector("#ptable"), profList, colorOf);
   sortNote();
   renderSections(rows);
@@ -442,6 +526,32 @@ function renderCourse(key) {
   drawChart(all.filter(r => (st.honors || !isHonors(r))), colorOf);
 }
 
+function trendOf(rows) {
+  const recent = agg(rows.filter(r => r[R.T] > LATEST - 20)), older = agg(rows.filter(r => r[R.T] <= LATEST - 20));
+  if (recent.gpa == null) return "Hasn't taught it in 2 years";
+  if (older.gpa == null) return "New in the last 2 years";
+  const d = recent.gpa - older.gpa;
+  return d > 0.1 ? "Grading easier lately" : d < -0.1 ? "Grading harder lately" : "Steady over time";
+}
+function compareHtml(list, allRows, colorOf) {
+  const picks = list.filter(x => st.chartProfs.has(x.p)).sort((a,b) => (b.gpa||0) - (a.gpa||0));
+  if (picks.length < 2) return `<p class="sortnote">Tick two or more professors in the table to compare them side by side.</p>`;
+  const best = picks[0].p;
+  const card = x => `<div class="ccard">
+    <div class="cname"><span class="sw" style="background:var(${colorOf.get(x.p) || "--fg-3"})"></span><button class="link" data-prof="${esc(x.p)}">${esc(nice(x.p))}</button></div>
+    ${x.p === best ? `<span class="tag good">Highest GPA</span>` : `<span class="tag ghost">&nbsp;</span>`}
+    <div class="cgpa num">${fmtGpa(x.gpa)}<small>GPA</small></div>
+    <dl>
+      <div><dt>Got an A</dt><dd class="num">${fmtPct(x.pA)}</dd></div>
+      <div><dt>D or F</dt><dd class="num">${fmtPct(x.pDF)}</dd></div>
+      <div><dt>Dropped (Q)</dt><dd class="num">${fmtPct(x.pQ)}</dd></div>
+      <div><dt>Students</dt><dd class="num">${x.graded.toLocaleString()}</dd></div>
+      <div><dt>Last taught</dt><dd class="num">${semShort(x.last)}</dd></div>
+    </dl>
+    <p class="trend">${trendOf(allRows.filter(r => PROFS[r[R.P]] === x.p))}</p>
+  </div>`;
+  return `<section class="panel"><div class="tablebar"><h2>Compare</h2><span class="hint" style="margin:0">Tick professors below to change who's here</span></div><div class="compare">${picks.slice(0,4).map(card).join("")}</div></section>`;
+}
 function bestProf(list) {
   const c = list.filter(x => x.graded >= 50 && x.gpa != null).sort((x,y) => y.gpa - x.gpa)[0];
   return c ? `<button class="link" data-prof="${esc(c.p)}">${esc(nice(c.p))}</button>` : "–";
@@ -557,15 +667,47 @@ const SYLLABI = window.SYLLABI || {};
 const HOWDY = "https://howdy.tamu.edu/main/home/class-search-ui";
 const coursicle = p => "https://www.google.com/search?q=" + encodeURIComponent("site:coursicle.com/tamu/professors " + p.split(" ")[0]);
 const rmp = p => "https://www.ratemyprofessors.com/search/professors/1003?q=" + encodeURIComponent(p.split(" ")[0]);
+// ---------- syllabus: paste text, pull out the policies, keep them on this device ----------
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} } };
+const TOPICS = {
+  attendance: /\b(attendance|absen(ce|ces|t)|excused|unexcused|student rule 7|tard(y|iness)|roll call|sign[- ]in)\b/gi,
+  late: /\b(late (work|assignment|submission|penalt)|late\b|make-?up|extensions?|deadline|past due|penalt(y|ies)|no credit)\b/gi,
+  grading: /\b(exam|midterm|final|quiz(zes)?|homework|assignments?|participation|project|paper|presentation|lab)s?\b/gi,
+};
+function extractPolicies(text) {
+  const paras = text.replace(/\r/g, "").split(/\n\s*\n|\n(?=[A-Z][A-Za-z /&-]{2,40}:?\s*\n)/).map(t => { const ls = t.trim().split(/\n/); if (ls.length > 1 && ls[0].trim().split(/\s+/).length <= 4 && !/[.!?]$/.test(ls[0].trim())) ls.shift(); return ls.join(" ").replace(/\s+/g, " ").trim(); }).filter(t => t.length > 25);
+  const score = (t, re) => (t.match(re) || []).length;
+  const scored = paras.map(t => ({ t, a: score(t, TOPICS.attendance), l: score(t, TOPICS.late) }));
+  const clip = t => t.length > 600 ? t.slice(0, 600) + "…" : t;
+  // each paragraph goes to the topic it talks about most
+  const pick = (key, other, n) => scored.filter(x => x[key] > 0 && x[key] >= x[other]).sort((a,b) => b[key] - a[key]).slice(0, n).map(x => clip(x.t));
+  const lines = text.split(/\n/).map(t => t.replace(/\s+/g, " ").trim()).filter(t => /\d{1,3}\s?%/.test(t) && new RegExp(TOPICS.grading.source, "i").test(t) && t.length < 140);
+  return { attendance: pick("a", "l", 2), late: pick("l", "a", 2), grading: [...new Set(lines)].slice(0, 8), at: Date.now() };
+}
 function policyHtml(p) {
-  const s = SYLLABI[p] || {};
-  const card = (k, v, fallback) => v ? `<div class="pcard"><span class="k">${k}</span><p>${esc(v.text)}</p><span class="src">${esc(v.source||"")}</span></div>`
-    : `<div class="pcard missing"><span class="k">${k}</span><p>${fallback}</p></div>`;
-  return `<section class="policy" aria-label="Before you enroll">
-    ${card("Attendance policy", s.attendance, `No syllabus on file yet. Find past syllabi in <a href="${HOWDY}" target="_blank" rel="noopener">Howdy Class Search</a>: pick a term, search the course, then open Syllabus. Needs your A&amp;M login.`)}
-    ${card("Late work policy", s.late, `Comes from the same syllabus. Upload one and it shows here.`)}
-    ${card("Student reviews", s.reviews, `<a href="${rmp(p)}" target="_blank" rel="noopener">Rate My Professors</a> or <a href="${coursicle(p)}" target="_blank" rel="noopener">Coursicle</a> for ${esc(nice(p).split(" ")[0])}. Check the department and first name match.`)}
+  const s = store.get("agf-syl-" + p, null);
+  const body = (arr, empty) => arr && arr.length ? arr.map(t => `<p>“${esc(t)}”</p>`).join("") : `<p class="muted">${empty}</p>`;
+  const reviews = `<a href="${rmp(p)}" target="_blank" rel="noopener">Rate My Professors</a> or <a href="${coursicle(p)}" target="_blank" rel="noopener">Coursicle</a> for ${esc(nice(p).split(" ")[0])}. Check the department and first name match.`;
+  if (!s) return `<section class="policy" aria-label="Before you enroll">
+    <div class="pcard missing"><span class="k">Attendance and late work</span><p>Open a past syllabus in <a href="${HOWDY}" target="_blank" rel="noopener">Howdy Class Search</a> (A&amp;M login), copy all the text, and paste it here.</p>
+      <button class="btn" id="sylopen" type="button">Paste a syllabus</button>
+      <div id="sylbox" hidden><textarea id="syltext" rows="6" placeholder="Paste the whole syllabus here"></textarea><div class="row"><button class="btn primary" id="sylgo" type="button">Pull out the policies</button><span class="src">Saved on this device only.</span></div></div>
+    </div>
+    <div class="pcard missing"><span class="k">Student reviews</span><p>${reviews}</p></div>
   </section>`;
+  return `<section class="policy" aria-label="Before you enroll">
+    <div class="pcard"><span class="k">Attendance</span>${body(s.attendance, "The syllabus doesn't mention attendance.")}</div>
+    <div class="pcard"><span class="k">Late work</span>${body(s.late, "The syllabus doesn't mention late work.")}</div>
+    <div class="pcard"><span class="k">Grade breakdown</span>${s.grading.length ? `<ul>${s.grading.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="muted">No percentages found.</p>`}</div>
+    <div class="pcard"><span class="k">Student reviews</span><p>${reviews}</p></div>
+  </section>
+  <p class="sortnote">From the syllabus you pasted. Saved on this device only. <button class="link" id="sylclear" type="button">Remove it</button></p>`;
+}
+function bindPolicy(p) {
+  const o = document.getElementById("sylopen"), go = document.getElementById("sylgo"), clr = document.getElementById("sylclear");
+  if (o) o.onclick = () => { document.getElementById("sylbox").hidden = false; o.hidden = true; document.getElementById("syltext").focus(); };
+  if (go) go.onclick = () => { const t = document.getElementById("syltext").value; if (t.trim().length < 50) return; store.set("agf-syl-" + p, extractPolicies(t)); render(); };
+  if (clr) clr.onclick = () => { try { localStorage.removeItem("agf-syl-" + p); } catch(e) {} render(); };
 }
 function renderProf(p) {
   const courses = [...profCourses.get(p)].sort();
@@ -610,13 +752,15 @@ function renderProf(p) {
     </details>
     <p class="foot">Grade reports only show a last name and first initial, so two different people with the same initial (for example two R. Johnsons) appear as one professor here.</p>`;
   bindFilters(app);
+  bindPolicy(p);
+  remember("prof", p);
   if (chart) { chart.destroy(); chart = null; }
 }
 
 // global link handling
 document.addEventListener("click", e => {
   const pb = e.target.closest("[data-prof]"); if (pb && !e.target.matches("input")) { go("prof", pb.dataset.prof); return; }
-  const cb = e.target.closest("button[data-course]"); if (cb && !cb.classList.contains("chip")) go("course", cb.dataset.course);
+  const cb = e.target.closest("button[data-course]"); if (cb) go("course", cb.dataset.course);
 });
 
 // ---------- search ----------
