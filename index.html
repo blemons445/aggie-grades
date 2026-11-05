@@ -493,6 +493,7 @@ function drawChart(rows, colorOf) {
 // Syllabus policies pulled from syllabi the user supplies. Key: professor as listed in grade reports.
 const SYLLABI = window.SYLLABI || {};
 const HOWDY = "https://howdy.tamu.edu/main/home/class-search-ui";
+const coursicle = p => "https://www.google.com/search?q=" + encodeURIComponent("site:coursicle.com/tamu/professors " + p.split(" ")[0]);
 const rmp = p => "https://www.ratemyprofessors.com/search/professors/1003?q=" + encodeURIComponent(p.split(" ")[0]);
 function policyHtml(p) {
   const s = SYLLABI[p] || {};
@@ -501,7 +502,7 @@ function policyHtml(p) {
   return `<section class="policy" aria-label="Before you enroll">
     ${card("Attendance policy", s.attendance, `No syllabus on file yet. Find past syllabi in <a href="${HOWDY}" target="_blank" rel="noopener">Howdy Class Search</a>: pick a term, search the course, then open Syllabus. Needs your A&amp;M login.`)}
     ${card("Late work policy", s.late, `Comes from the same syllabus. Upload one and it shows here.`)}
-    ${card("Student reviews", s.reviews, `<a href="${rmp(p)}" target="_blank" rel="noopener">Search Rate My Professors for ${esc(nice(p).split(" ")[0])}</a>. Check the department and first name match.`)}
+    ${card("Student reviews", s.reviews, `<a href="${rmp(p)}" target="_blank" rel="noopener">Rate My Professors</a> or <a href="${coursicle(p)}" target="_blank" rel="noopener">Coursicle</a> for ${esc(nice(p).split(" ")[0])}. Check the department and first name match.`)}
   </section>`;
 }
 function renderProf(p) {

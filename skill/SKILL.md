@@ -22,7 +22,7 @@ Help a Texas A&M student decide on a class or professor. Lead with what students
 Fetch the course's section history (GET, returns JSON):
 
 ```
-https://SITE_URL/api/grades?dept=SCMT&number=364
+https://aggie-grades.vercel.app/api/grades?dept=SCMT&number=364
 ```
 
 Each item in `classes` is one section: `section, A, B, C, D, F, I, S, U, Q, X, prof, year, semester`.
@@ -35,7 +35,7 @@ Compute, never guess:
 
 Show a short table of professors sorted by most recent term: last taught, sections, students, GPA, % A, % D/F. Then call out the requested professor against the course average ("+0.25 GPA above the course").
 
-If the fetch fails, tell the student to open SITE_URL and search the course there.
+If the fetch fails, tell the student to open https://aggie-grades.vercel.app and search the course there.
 
 ## Step 3: Syllabus (attendance + late work)
 
@@ -54,7 +54,7 @@ Quote, don't paraphrase, for attendance and late work. Name the term the syllabu
 
 ## Step 4: Reviews
 
-Search the web for `"<last name>" Texas A&M <department> Rate My Professors` and Reddit r/aggies. Summarize in 2-3 lines with what repeats across reviews (workload, exams, attendance checks). Link the sources. Make sure the department and first name match before using a review.
+Search the web for `"<last name>" Texas A&M <department> Rate My Professors`. If that finds nothing useful, try Coursicle (https://www.coursicle.com/tamu/professors/, search `site:coursicle.com/tamu/professors <last name>`), then Reddit r/aggies. Summarize in 2-3 lines with what repeats across reviews (workload, exams, attendance checks). Link the sources. Make sure the department and first name match before using a review.
 
 ## Output format
 
@@ -62,7 +62,7 @@ Search the web for `"<last name>" Texas A&M <department> Rate My Professors` and
 ## JOHNSON R · BUSN 489
 **Attendance:** "<quote>" (Fall 2025 syllabus)
 **Late work:** "<quote>"
-**Students say:** <2-3 lines> [RMP](link) · [Reddit](link)
+**Students say:** <2-3 lines> [RMP](link) · [Coursicle](link) · [Reddit](link)
 **Grades:** 3.31 GPA · 45% A · 1% D/F · 264 students · Spring 2015 to Spring 2018
 <professor table>
 ```
