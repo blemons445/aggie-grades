@@ -1,0 +1,6 @@
+{
+  "name": "aggie-grade-finder",
+  "private": true,
+  "description": "Texas A&M grade distributions by course and professor",
+  "engines": { "node": ">=18" }
+}
