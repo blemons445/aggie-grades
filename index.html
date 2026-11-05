@@ -152,6 +152,22 @@ a.link:hover, button.link:hover { text-decoration: underline; }
 .btn { justify-self: start; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 14px; cursor: pointer; }
 .btn.primary { background: var(--cta); border-color: var(--cta); color: var(--on-cta); }
 .more { margin-top: 10px; }
+/* Loader: five grade bars (A to F) rising in turn */
+.loader { display: inline-flex; align-items: flex-end; gap: 5px; height: 40px; }
+.loader span { width: 8px; height: 100%; border-radius: 4px 4px 2px 2px; transform-origin: bottom; animation: agf-bar 1s ease-in-out infinite; }
+.loader span:nth-child(1) { background: var(--g-a); animation-delay: 0s; }
+.loader span:nth-child(2) { background: var(--g-b); animation-delay: .12s; }
+.loader span:nth-child(3) { background: var(--g-c); animation-delay: .24s; }
+.loader span:nth-child(4) { background: var(--g-d); animation-delay: .36s; }
+.loader span:nth-child(5) { background: var(--g-f); animation-delay: .48s; }
+@keyframes agf-bar { 0%, 100% { transform: scaleY(.25); } 45% { transform: scaleY(1); } }
+#splash { position: fixed; inset: 0; z-index: 50; background: var(--bg); display: grid; place-items: center; transition: opacity .35s ease, visibility .35s; }
+#splash.out { opacity: 0; visibility: hidden; }
+.splash-in { display: grid; justify-items: center; gap: 18px; }
+.splash-in .logo { min-width: 44px; height: 44px; padding: 0 10px; border-radius: 11px; font-size: 16px; }
+.splash-in p, .loadpanel p { margin: 0; color: var(--fg-3); font-size: 14px; }
+.loadpanel { display: grid; justify-items: center; gap: 14px; padding-block: 56px; }
+@media (prefers-reduced-motion: reduce) { .loader span { animation: none; transform: scaleY(.7); } .loader span:nth-child(2n) { transform: scaleY(.45); } }
 .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
 .ccard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 8px; align-content: start; background: var(--surface-2); min-width: 0; }
 .cname { display: flex; align-items: center; gap: 8px; font-size: 15px; min-width: 0; }
@@ -167,8 +183,6 @@ a.link:hover, button.link:hover { text-decoration: underline; }
 .tag.ghost { visibility: hidden; justify-self: start; margin: 0; }
 @media (max-width: 560px) { .compare { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 47%; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding-bottom: 4px; } .ccard { padding: 12px; scroll-snap-align: start; } .cgpa { font-size: 28px; } }
 .hero { padding-block: 24px 8px; display: grid; gap: 12px; max-width: 680px; }
-#heroviz { width: 100%; max-width: 100%; height: 110px; display: block; margin-bottom: 6px; }
-@media (min-width: 900px) { .hero { max-width: none; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); column-gap: 48px; align-items: end; } .hero > :not(#heroviz) { grid-column: 1; } #heroviz { grid-column: 2; grid-row: 1 / span 3; height: 100%; min-height: 220px; margin: 0; } }
 .hero h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(32px, 7vw, 52px); line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; }
 .hero p { margin: 0; color: var(--fg-2); font-size: 17px; max-width: 52ch; }
 .search.big input { padding: 14px 16px 14px 44px; font-size: 17px; border-width: 1.5px; box-shadow: var(--shadow); }
@@ -219,6 +233,7 @@ details.panel[open] > summary::after { content: "Hide"; }
 <body>
 
 
+<div id="splash" aria-hidden="true"><div class="splash-in"><span class="logo">AGF</span><div class="loader" role="status" aria-label="Loading"><span></span><span></span><span></span><span></span><span></span></div><p>Loading grades…</p></div></div>
 <header class="band">
   <div class="wrap">
     <a class="brand" href="#" aria-label="Aggie Grade Finder home"><span class="logo" aria-hidden="true">AGF</span><span class="bname">Aggie Grade Finder</span></a>
@@ -293,13 +308,19 @@ function fetchCourse(key) {
   pending.set(key, pr);
   return pr;
 }
-function showLoading(key) { document.getElementById("app").innerHTML = `<div class="head"><div><h1>${esc(key)}</h1><div class="meta">Loading grade history…</div></div></div>`; }
+function showLoading(key) { if (chart) { chart.destroy(); chart = null; } document.getElementById("app").innerHTML = `<div class="head"><div><h1>${esc(key)}</h1></div></div><div class="loadpanel"><div class="loader" role="status" aria-label="Loading"><span></span><span></span><span></span><span></span><span></span></div><p>Loading every semester of grades…</p></div>`; }
 function showMissing(key) { document.getElementById("app").innerHTML = `<div class="head"><div><h1>${esc(key)}</h1><div class="meta">Couldn't load grades for ${esc(key)}. Check the course number, or try again in a minute.</div></div></div>`; }
 // Full course index (every course with grades in the last four terms), built from the registrar's grade reports.
 let IDX = null;
 const idxReady = fetch("courses.json").then(r => r.ok ? r.json() : null).then(j => { IDX = j; if (document.activeElement === qi) showSuggest(); return j; }).catch(() => null);
 const triedProf = new Set();
 let idxDone = false; idxReady.then(() => { idxDone = true; });
+(function () {
+  const sp = document.getElementById("splash"), t0 = performance.now();
+  const hide = () => { if (!sp || sp.classList.contains("out")) return; sp.classList.add("out"); setTimeout(() => sp.remove(), 400); };
+  idxReady.then(() => setTimeout(hide, Math.max(0, 450 - (performance.now() - t0))));
+  setTimeout(hide, 3000);
+})();
 function remember(type, key) { const r = store.get("agf-recent", []).filter(x => !(x.type === type && x.key === key)); r.unshift({type, key}); store.set("agf-recent", r.slice(0, 6)); }
 function renderHome() {
   if (chart) { chart.destroy(); chart = null; }
@@ -308,48 +329,15 @@ function renderHome() {
   const chip = (type, key) => `<button class="chip" ${type === "prof" ? `data-prof="${esc(key)}"` : `data-course="${key}"`}>${type === "prof" ? esc(nice(key)) : key}</button>`;
   document.getElementById("app").innerHTML = `
     <section class="hero">
-      <canvas id="heroviz" aria-hidden="true"></canvas>
       <h1>Pick your classes with real grades.</h1>
       <p>Every Texas A&amp;M course and professor, with GPA and how many students got an A, semester by semester.</p>
       <div class="search big"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="q2" type="search" autocomplete="off" placeholder="Try chem, MATH 151 or Johnson" aria-label="Search courses and professors"></div>
     </section>
     ${recent.length ? `<section class="homeblock"><h2>Recent</h2><div class="chiprow">${recent.map(r => chip(r.type, r.key)).join("")}</div></section>` : ""}
     <section class="homeblock"><h2>Most taken courses</h2><div class="chiprow">${popular.map(c => chip("course", c)).join("")}</div></section>`;
-  startHeroViz();
   const q2 = document.getElementById("q2");
   q2.onfocus = () => { qi.focus(); };
   q2.oninput = () => { qi.value = q2.value; q2.value = ""; qi.focus(); showSuggest(); };
-}
-// Home animation: a living grade histogram. Five bands (A to F) of thin bars that swell and settle like a crowd of semesters.
-let vizRaf = 0;
-function startHeroViz() {
-  cancelAnimationFrame(vizRaf);
-  const cv = document.getElementById("heroviz"); if (!cv) return;
-  const ctx = cv.getContext("2d");
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const bands = ["--g-a","--g-b","--g-c","--g-d","--g-f"];
-  const weights = [1, 0.72, 0.42, 0.2, 0.12];
-  const N = 60, seeds = Array.from({length: N}, (_, i) => [Math.sin(i * 12.9898) * 43758.5453 % 1, Math.cos(i * 78.233) * 12345.678 % 1]);
-  let cols = bands.map(css), t0 = performance.now();
-  const frame = now => {
-    if (!cv.isConnected) return;
-    const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
-    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cols = bands.map(css); }
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
-    const t = reduce ? 4 : (now - t0) / 1000, gap = 3, bw = (w - gap * (N - 1)) / N;
-    for (let i = 0; i < N; i++) {
-      const band = Math.min(4, Math.floor(i / (N / 5))), x = i * (bw + gap);
-      const [a, b] = seeds[i];
-      const wave = 0.55 + 0.25 * Math.sin(t * 0.9 + i * 0.22 + a * 6) + 0.2 * Math.sin(t * 0.37 - i * 0.11 + b * 9);
-      const bh = Math.max(4, h * weights[band] * wave);
-      ctx.fillStyle = cols[band];
-      ctx.globalAlpha = 0.9;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, h - bh, bw, bh, [Math.min(4, bw / 2), Math.min(4, bw / 2), 0, 0]) : ctx.rect(x, h - bh, bw, bh); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    if (!reduce) vizRaf = requestAnimationFrame(frame);
-  };
-  vizRaf = requestAnimationFrame(frame);
 }
 function renderDept(code) {
   const name = (IDX && IDX.depts[code]) || code;
