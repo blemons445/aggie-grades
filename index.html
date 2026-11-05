@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Texas A&amp;M grade distributions by course and professor, sortable, with a GPA chart.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-title" content="AGF">
 <style>[hidden]{display:none!important}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>Aggie Grade Finder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +65,7 @@ body::before { background: var(--nav); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 19px; white-space: nowrap; color: var(--fg); }
 .logo { min-width: 28px; padding: 0 6px; height: 28px; border-radius: 7px; background: var(--cta); color: var(--on-cta); display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
 .search { position: relative; flex: 1 1 200px; min-width: 0; }
-.search input { width: 100%; padding: 9px 14px 9px 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font-size: 15px; }
+.search input { width: 100%; padding: 9px 14px 9px 38px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font-size: 16px; }
 .search input::placeholder { color: var(--fg-3); }
 .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--fg-3); }
 .themebtn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); display: grid; place-items: center; cursor: pointer; color: var(--fg); flex: none; }
@@ -115,8 +118,9 @@ thead th { position: sticky; top: 0; background: var(--surface); font-size: 12px
 thead th.sortable { cursor: pointer; }
 thead th.sortable:hover { color: var(--fg); }
 thead th[aria-sort] { color: var(--link); }
-thead th[aria-sort="ascending"]::after { content: " ▲"; font-size: 9px; }
-thead th[aria-sort="descending"]::after { content: " ▼"; font-size: 9px; }
+thead th[aria-sort="ascending"]::after { content: " ↑"; }
+thead th[aria-sort="descending"]::after { content: " ↓"; }
+.sortnote { font-size: 13px; color: var(--fg-3); margin: 8px 0 0; }
 tbody tr:hover { background: var(--surface-2); }
 td.num { font-size: 13px; }
 .pname { display: inline-flex; align-items: center; gap: 8px; }
@@ -141,6 +145,11 @@ a.link:hover, button.link:hover { text-decoration: underline; }
 .pcard a { color: var(--link); font-weight: 600; }
 .pcard.missing p { color: var(--fg-3); }
 .more { margin-top: 10px; }
+.sm-only { display: none; }
+.semrow { display: flex; gap: 8px; overflow-x: auto; padding-block: 2px 6px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.sem { flex: none; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg-2); border-radius: 999px; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.sem:hover { border-color: var(--cta); color: var(--fg); }
+.sem[aria-pressed="true"] { background: var(--cta); color: var(--on-cta); border-color: var(--cta); }
 details.panel > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
 details.panel > summary::-webkit-details-marker { display: none; }
 details.panel > summary h2 { margin: 0; }
@@ -151,6 +160,28 @@ details.panel[open] > summary::after { content: "Hide"; }
 .foot { color: var(--fg-3); font-size: 13px; max-width: 70ch; }
 .foot b { color: var(--fg-2); }
 @media (max-width: 640px) { .chartbox { height: 260px; } .stat .v { font-size: 30px; } .brand .bname { display: none; } }
+@media (max-width: 560px) {
+  .sm-hide { display: none; }
+  .sm-only { display: inline; }
+  .lg-only { display: none; }
+  thead th { white-space: normal; letter-spacing: .02em; font-size: 11px; vertical-align: bottom; }
+  .pname .link { white-space: normal; text-align: left; }
+  th, td { padding: 9px 6px; }
+  .pname { gap: 10px; }
+  .pname input { width: 20px; height: 20px; }
+  .panel { padding: 16px 14px; }
+  .tscroll { margin: 0 -14px; padding: 0 14px; }
+  .stats { padding: 14px 6px; gap: 4px; }
+  .stat { padding: 2px; }
+  .stat .v { font-size: 28px; }
+  .stat .k { font-size: 11px; letter-spacing: .05em; }
+  .head { gap: 12px; }
+  .seg button { padding: 7px 14px; }
+  .tablebar input { width: 100%; font-size: 16px; }
+  .policy { grid-template-columns: 1fr; }
+  .legend { font-size: 12px; gap: 6px 10px; }
+  button.link { padding-block: 4px; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -162,7 +193,7 @@ details.panel[open] > summary::after { content: "Hide"; }
     <div class="brand"><span class="logo" aria-hidden="true">AGF</span><span class="bname">Aggie Grade Finder</span></div>
     <div class="search" role="combobox" aria-expanded="false" aria-haspopup="listbox">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <input id="q" type="search" autocomplete="off" placeholder="Course or professor, e.g. SCMT 364 or Johnson" aria-label="Search courses and professors">
+      <input id="q" type="search" autocomplete="off" placeholder="Course or professor" aria-label="Search courses and professors">
       <div class="suggest" id="suggest" role="listbox" hidden></div>
     </div>
     <button class="themebtn" id="themebtn" type="button" aria-label="Switch light or dark mode"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -268,15 +299,14 @@ const st = {
   secFilter: "",
   secLimit: 40,
 };
-try { const s = JSON.parse(localStorage.getItem("agf-prefs")||"{}"); if (["all","5","1"].includes(s.range)) st.range = s.range; } catch(e) {}
-function savePrefs(){ try { localStorage.setItem("agf-prefs", JSON.stringify({range:st.range,honors:st.honors,summer:st.summer})); } catch(e) {} }
+
+function savePrefs(){}
 
 function inRange(r) {
   if (!st.summer && r[R.T]%10 === 2) return false;
   if (!st.honors && isHonors(r)) return false;
   if (st.range === "all") return true;
-  const yrs = +st.range;
-  return r[R.T] > LATEST - yrs*10;
+  return r[R.T] === +st.range;
 }
 
 // ---------- chips ----------
@@ -318,11 +348,11 @@ function render() {
   document.getElementById("foot").innerHTML = `<b>About the data.</b> Section-level grade counts from Texas A&amp;M's public grade distribution reports (Spring 2015 to ${semLabel(LATEST)}), via anex.us. GPA counts A through F only; Q-drops, I, S and U are left out of GPA, as the registrar does. Professors are listed the way the reports list them: last name and first initial. Honors sections are numbered 200–299.`;
 }
 
-function filtersHtml() {
-  const seg = [["all","All time"],["5","5 yrs"],["1","1 yr"]].map(([k,l]) => `<button data-range="${k}" aria-pressed="${st.range===k}">${l}</button>`).join("");
-  return `<div class="filters">
-    <div class="seg" role="group" aria-label="Time range">${seg}</div>
-  </div>`;
+function semsOf(rows) { return [...new Set(rows.map(r => r[R.T]))].sort((a,b) => b-a); }
+function fixRange(sems) { if (st.range !== "all" && !sems.includes(+st.range)) st.range = "all"; }
+function filtersHtml(sems) {
+  const pill = (k, l) => `<button class="sem" data-range="${k}" aria-pressed="${String(st.range)===String(k)}">${l}</button>`;
+  return `<div class="semrow" role="group" aria-label="Semester">${pill("all","All time")}${sems.map(t => pill(t, semLabel(t))).join("")}</div>`;
 }
 function bindFilters(root) {
   root.querySelectorAll("[data-range]").forEach(b => b.onclick = () => { st.range = b.dataset.range; savePrefs(); render(); });
@@ -339,6 +369,7 @@ function statsHtml(a, extra) {
 
 function renderCourse(key) {
   const all = D.courses[key];
+  fixRange(semsOf(all));
   const rows = all.filter(inRange);
   const a = agg(rows);
   // per professor
@@ -357,9 +388,9 @@ function renderCourse(key) {
   const app = document.getElementById("app");
   app.innerHTML = `
     <div class="head">
-      <div><h1>${esc(key)}</h1><div class="meta">${sem0 ? semLabel(sem0) + " to " + semLabel(a.last) : "no sections in this range"}</div></div>
-      ${filtersHtml()}
+      <div><h1>${esc(key)}</h1><div class="meta">${st.range === "all" ? (sem0 ? semLabel(sem0) + " to " + semLabel(a.last) : "") : "Showing " + semLabel(+st.range) + " only"}</div></div>
     </div>
+    ${filtersHtml(semsOf(all))}
     ${statsHtml(a, "")}
     <section class="panel">
       <h2>GPA by semester</h2>
@@ -369,6 +400,7 @@ function renderCourse(key) {
     <section class="panel">
       <div class="tablebar"><h2>Professors</h2><span class="hint" style="margin:0">Tick to add to the chart</span></div>
       <div class="tscroll"><table id="ptable">${profTable(profList, colorOf)}</table></div>
+      <p class="sortnote" id="psort"></p>
     </section>
     <details class="panel">
       <summary><h2>Every section</h2></summary>
@@ -378,9 +410,10 @@ function renderCourse(key) {
     </details>`;
   bindFilters(app);
   bindProfTable(app.querySelector("#ptable"), profList, colorOf);
+  sortNote();
   renderSections(rows);
   app.querySelector("#secq").oninput = e => { st.secFilter = e.target.value; st.secLimit = 40; renderSections(rows); };
-  drawChart(rows, colorOf);
+  drawChart(all.filter(r => (st.honors || !isHonors(r))), colorOf);
 }
 
 function bestProf(list) {
@@ -398,12 +431,12 @@ function colorMap() {
 }
 
 const PCOLS = [
-  ["p","Professor","l"],["last","Last taught"],["gpa","GPA"],["pA","% A"],["graded","Students"],["dist","Grades",""]
+  ["p","Professor","l"],["last","Last taught"],["gpa","GPA"],["pA","Got an A"],["graded","Students","sm-hide"],["dist","Grades",""]
 ];
 function profTable(list, colorOf) {
   const {key, dir} = st.profSort;
   list.sort((x,y) => { let a = x[key], b = y[key]; if (key === "p") return dir * a.localeCompare(b); if (a==null) a = -1; if (b==null) b = -1; return dir * (a - b) || x.p.localeCompare(y.p); });
-  const th = PCOLS.map(([k,l,cl]) => k === "dist" ? `<th class="l">${l}</th>` : `<th class="sortable ${cl||""}" data-k="${k}" ${k===key?`aria-sort="${dir>0?"ascending":"descending"}"`:""} tabindex="0">${l}</th>`).join("");
+  const th = PCOLS.map(([k,l,cl]) => k === "dist" ? `<th class="l sm-hide">${l}</th>` : `<th class="sortable ${cl||""}" data-k="${k}" ${k===key?`aria-sort="${dir>0?"ascending":"descending"}"`:""} tabindex="0">${l}</th>`).join("");
   const body = list.map(x => {
     const on = st.chartProfs.has(x.p);
     const col = colorOf.get(x.p);
@@ -412,15 +445,15 @@ function profTable(list, colorOf) {
       <td class="num">${semShort(x.last)}</td>
       <td class="num gpa">${fmtGpa(x.gpa)}</td>
       <td class="num">${fmtPct(x.pA)}</td>
-      <td class="num">${x.graded.toLocaleString()}</td>
-      <td class="l">${distBar(x)}</td></tr>`;
+      <td class="num sm-hide">${x.graded.toLocaleString()}</td>
+      <td class="l sm-hide">${distBar(x)}</td></tr>`;
   }).join("");
   return `<thead><tr>${th}</tr></thead><tbody>${body || `<tr><td colspan="6" class="empty">No sections match these filters.</td></tr>`}</tbody>`;
 }
 function bindProfTable(tbl, list, colorOf) {
   tbl.addEventListener("click", e => {
     const th = e.target.closest("th[data-k]");
-    if (th) { sortBy(st.profSort, th.dataset.k, th.dataset.k === "p" ? 1 : -1); tbl.innerHTML = profTable(list, colorMap()); return; }
+    if (th) { sortBy(st.profSort, th.dataset.k, th.dataset.k === "p" ? 1 : -1); tbl.innerHTML = profTable(list, colorMap()); sortNote(); return; }
   });
   tbl.addEventListener("keydown", e => { const th = e.target.closest("th[data-k]"); if (th && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); th.click(); } });
   tbl.addEventListener("change", e => {
@@ -429,9 +462,12 @@ function bindProfTable(tbl, list, colorOf) {
     render();
   });
 }
+const LABELS = {p:"professor", last:"last taught", gpa:"GPA", pA:"how many got an A", graded:"students"};
+function sortNote() { const el = document.getElementById("psort"); if (!el) return; const {key, dir} = st.profSort; const lab = LABELS[key] || key;
+  el.textContent = `Sorted by ${lab}, ${key === "p" ? (dir > 0 ? "A to Z" : "Z to A") : key === "last" ? (dir < 0 ? "newest first" : "oldest first") : (dir < 0 ? "highest first" : "lowest first")}. Tap any column to sort by it.`; }
 function sortBy(s, k, firstDir) { if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = firstDir; } }
 
-const SCOLS = [["T","Semester","l"],["P","Professor","l"],["sec","Section","l"],["n","Students"],["A","A"],["B","B"],["C","C"],["D","D"],["F","F"],["Q","Q"],["gpa","GPA"],["pA","% A"]];
+const SCOLS = [["T","Semester","l"],["P","Professor","l"],["sec","Section","l sm-hide"],["n","Students","sm-hide"],["A","A","sm-hide"],["B","B","sm-hide"],["C","C","sm-hide"],["D","D","sm-hide"],["F","F","sm-hide"],["Q","Q","sm-hide"],["gpa","GPA"],["pA","Got an A"]];
 function renderSections(rows) {
   const q = st.secFilter.trim().toLowerCase();
   let list = rows.map(r => { const n = r[R.A]+r[R.B]+r[R.C]+r[R.D]+r[R.F]; return { r, T: r[R.T], P: PROFS[r[R.P]], sec: r[R.sec], n, A:r[R.A],B:r[R.B],C:r[R.C],D:r[R.D],F:r[R.F],Q:r[R.Q], gpa: n ? (4*r[R.A]+3*r[R.B]+2*r[R.C]+r[R.D])/n : null, pA: pct(r[R.A], n) }; });
@@ -441,10 +477,10 @@ function renderSections(rows) {
   const shown = list.slice(0, st.secLimit);
   const th = SCOLS.map(([k,l,cl]) => `<th class="sortable ${cl||""}" data-k="${k}" ${k===key?`aria-sort="${dir>0?"ascending":"descending"}"`:""} tabindex="0">${l}</th>`).join("");
   const body = shown.map(x => `<tr>
-    <td class="l num">${semLabel(x.T)}</td>
+    <td class="l num"><span class="lg-only">${semLabel(x.T)}</span><span class="sm-only">${semShort(x.T)}</span></td>
     <td class="l"><button class="link" data-prof="${esc(x.P)}">${esc(nice(x.P))}</button></td>
-    <td class="l num">${esc(x.sec)}${isHonors(x.r)?`<span class="tag">H</span>`:""}</td>
-    <td class="num">${x.n}</td><td class="num">${x.A}</td><td class="num">${x.B}</td><td class="num">${x.C}</td><td class="num">${x.D}</td><td class="num">${x.F}</td><td class="num">${x.Q}</td>
+    <td class="l num sm-hide">${esc(x.sec)}${isHonors(x.r)?`<span class="tag">H</span>`:""}</td>
+    <td class="num sm-hide">${x.n}</td><td class="num sm-hide">${x.A}</td><td class="num sm-hide">${x.B}</td><td class="num sm-hide">${x.C}</td><td class="num sm-hide">${x.D}</td><td class="num sm-hide">${x.F}</td><td class="num sm-hide">${x.Q}</td>
     <td class="num gpa">${fmtGpa(x.gpa)}</td><td class="num">${fmtPct(x.pA)}</td></tr>`).join("");
   const tbl = document.getElementById("stable");
   tbl.innerHTML = `<thead><tr>${th}</tr></thead><tbody>${body || `<tr><td colspan="12" class="empty">No sections match “${esc(st.secFilter)}”.</td></tr>`}</tbody>`;
@@ -508,6 +544,7 @@ function policyHtml(p) {
 function renderProf(p) {
   const courses = [...profCourses.get(p)].sort();
   const allRows = courses.flatMap(c => D.courses[c].filter(r => PROFS[r[R.P]] === p).map(r => ({c, r})));
+  fixRange(semsOf(allRows.map(x => x.r)));
   const rows = allRows.filter(x => inRange(x.r));
   const a = agg(rows.map(x => x.r));
   const app = document.getElementById("app");
@@ -520,14 +557,14 @@ function renderProf(p) {
   app.innerHTML = `
     <div class="head">
       <div><h1>${esc(nice(p))}</h1><div class="meta">Listed in grade reports as <span class="num">${esc(p)}</span> · ${courses.length} loaded course${courses.length>1?"s":""}</div></div>
-      ${filtersHtml()}
     </div>
     ${policyHtml(p)}
+    ${filtersHtml(semsOf(allRows.map(x => x.r)))}
     ${statsHtml(a, "")}
     <section class="panel">
       <div class="tablebar"><h2>Courses taught</h2></div>
       <div class="tscroll"><table>
-        <thead><tr><th class="l">Course</th><th>Their GPA</th><th>vs. course</th><th>% A</th><th>Students</th></tr></thead>
+        <thead><tr><th class="l">Course</th><th>Their GPA</th><th>vs. course</th><th>Got an A</th><th>Students</th></tr></thead>
         <tbody>${perCourse.map(x => { const d = x.mine.gpa - x.everyone.gpa; return `<tr>
           <td class="l"><button class="link" data-course="${x.c}">${x.c}</button></td>
           <td class="num gpa">${fmtGpa(x.mine.gpa)}</td>
@@ -538,10 +575,10 @@ function renderProf(p) {
     <details class="panel">
       <summary><h2>Every section</h2></summary>
       <div class="tscroll"><table>
-        <thead><tr><th class="l">Semester</th><th class="l">Course</th><th class="l">Section</th><th>Students</th><th>A</th><th>B</th><th>C</th><th>D</th><th>F</th><th>Q</th><th>GPA</th></tr></thead>
+        <thead><tr><th class="l">Semester</th><th class="l">Course</th><th class="l sm-hide">Section</th><th>Students</th><th class="sm-hide">A</th><th class="sm-hide">B</th><th class="sm-hide">C</th><th class="sm-hide">D</th><th class="sm-hide">F</th><th class="sm-hide">Q</th><th>GPA</th></tr></thead>
         <tbody>${rows.sort((x,y)=>y.r[R.T]-x.r[R.T]||x.c.localeCompare(y.c)).map(({c,r}) => { const n=r[R.A]+r[R.B]+r[R.C]+r[R.D]+r[R.F]; return `<tr>
-          <td class="l num">${semLabel(r[R.T])}</td><td class="l"><button class="link" data-course="${c}">${c}</button></td><td class="l num">${esc(r[R.sec])}${isHonors(r)?`<span class="tag">H</span>`:""}</td>
-          <td class="num">${n}</td><td class="num">${r[R.A]}</td><td class="num">${r[R.B]}</td><td class="num">${r[R.C]}</td><td class="num">${r[R.D]}</td><td class="num">${r[R.F]}</td><td class="num">${r[R.Q]}</td>
+          <td class="l num"><span class="lg-only">${semLabel(r[R.T])}</span><span class="sm-only">${semShort(r[R.T])}</span></td><td class="l"><button class="link" data-course="${c}">${c}</button></td><td class="l num sm-hide">${esc(r[R.sec])}${isHonors(r)?`<span class="tag">H</span>`:""}</td>
+          <td class="num">${n}</td><td class="num sm-hide">${r[R.A]}</td><td class="num sm-hide">${r[R.B]}</td><td class="num sm-hide">${r[R.C]}</td><td class="num sm-hide">${r[R.D]}</td><td class="num sm-hide">${r[R.F]}</td><td class="num sm-hide">${r[R.Q]}</td>
           <td class="num gpa">${fmtGpa(n?(4*r[R.A]+3*r[R.B]+2*r[R.C]+r[R.D])/n:null)}</td></tr>`; }).join("")}</tbody>
       </table></div>
     </details>
@@ -582,7 +619,7 @@ function showSuggest() {
   hits = search(qi.value); sel = 0;
   if (!qi.value.trim()) { sg.hidden = true; return; }
   sg.innerHTML = hits.length ? hits.map((h,i) => `<button role="option" aria-selected="${i===sel}" data-i="${i}"><span class="kind">${h.type==="prof"?"Professor":"Course"}</span><span>${h.type==="prof"?esc(nice(h.key)):h.key}</span><span class="sub">${esc(h.sub)}</span></button>`).join("")
-    : `<div class="empty" style="padding:14px">Nothing matches “${esc(qi.value)}”. Type a course like SCMT 364, or a professor's last name.</div>`;
+    : `<div class="empty" style="padding:14px">${/^[A-Za-z]{4}\s*\d{0,2}$/.test(qi.value.trim()) ? `Keep typing the 3-digit course number, like ${esc(qi.value.trim().slice(0,4).toUpperCase())} 363.` : `Nothing matches “${esc(qi.value)}”. Type a course like SCMT 364, or a professor's last name.`}</div>`;
   sg.hidden = false;
 }
 function pick(i) { const h = hits[i]; if (!h) return; sg.hidden = true; qi.value = ""; qi.blur(); go(h.type === "prof" ? "prof" : "course", h.key); }
